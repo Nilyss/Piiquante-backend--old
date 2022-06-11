@@ -1,20 +1,17 @@
-const jwt = require ('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, 'ici_c_est_un_test_password_h4K2_dh_KmlK_k_8_gpbv_qqh_Test');
+        const decodedToken = jwt.verify(token, 'h4K2dhKmlKk8gpbvqqh!%');
         const userId = decodedToken.userId;
-        if( req.body.userId && req.body.userId !== userId) {
+        req.auth = { userId: userId };
+        if (req.body.userId && req.body.userId !== userId) {
             throw 'Invalid user ID';
         }
         else {
             next();
         }
     }
-    catch {
-        res.status(401).json({
-            error: new Error('Invalid request!')
-        });
-    }
+    catch { error => res.status(401).json({ error }) }
 };
