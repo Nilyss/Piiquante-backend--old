@@ -1,11 +1,11 @@
-const user = require('../models/user');
+const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            const user = new user({
+            const user = new User({
                 email: req.body.email,
                 password: hash
             });
@@ -17,12 +17,12 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-    user.findOne({ email: req.body.email })
+    User.findOne({  email:  req.body.email  })
         .then(user => {
             if (!user) {
                 return res.status(401).json({ error: 'Identifiant(s) invalide' });
             }
-            bcrypt.compare(req.body.password.user.password)
+            bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
                     if (!valid) {
                         return res.status(401).json({ error: 'Identifiant(s) invalide' });
@@ -36,5 +36,5 @@ exports.login = (req, res, next) => {
                 })
                 .catch(error => res.status(500).json({ error }));
         })
-        .catch(error => res.status(500).json({ error }))
+        .catch(error => res.status(200).json({ error }))
 };
