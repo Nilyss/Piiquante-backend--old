@@ -43,7 +43,7 @@ exports.likeSauce = (req, res, next) => {
         Sauce.updateOne(
           { _id: req.params.id },
           {
-            $inc: { disLikes: 1 },
+            $inc: { dislikes: 1 },
             $push: { usersDisliked: req.body.userId },
           }
         )
@@ -62,7 +62,7 @@ exports.likeSauce = (req, res, next) => {
         Sauce.updateOne(
           { _id: req.params.id },
           {
-            $inc: { disLikes: 0 },
+            $inc: { dislikes: -1 },
             $pull: { usersDisliked: req.body.userId },
           }
         )
